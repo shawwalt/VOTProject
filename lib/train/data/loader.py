@@ -33,7 +33,7 @@ def ltr_collate(batch):
             numel = sum([x.numel() for x in batch])
             storage = batch[0].storage()._new_shared(numel)
             out = batch[0].new(storage)
-        return torch.stack(batch, 0, out=out)
+        return torch.stack(batch, 0, out=out) # out=out指定输出内存空间，避免复制
         # if batch[0].dim() < 4:
         #     return torch.stack(batch, 0, out=out)
         # return torch.cat(batch, 0, out=out)

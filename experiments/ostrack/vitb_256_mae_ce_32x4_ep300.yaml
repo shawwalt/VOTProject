@@ -62,12 +62,12 @@ TRAIN:
   DROP_PATH_RATE: 0.1
   CE_START_EPOCH: 20  # candidate elimination start epoch
   CE_WARM_EPOCH: 80  # candidate elimination warm up epoch
-  BATCH_SIZE: 32
+  BATCH_SIZE: 64
   EPOCH: 300
   GIOU_WEIGHT: 2.0
   L1_WEIGHT: 5.0
   GRAD_CLIP_NORM: 0.1
-  LR: 0.0004
+  LR: 0.0008
   LR_DROP_EPOCH: 240
   NUM_WORKER: 10
   OPTIMIZER: ADAMW

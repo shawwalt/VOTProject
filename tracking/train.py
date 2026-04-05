@@ -1,6 +1,8 @@
 import os
 import argparse
 import random
+import warnings
+warnings.filterwarnings("ignore")
 
 
 def parse_args():

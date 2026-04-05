@@ -177,10 +177,10 @@ class Got10k(BaseVideoDataset):
         frame_list = [self._get_frame(seq_path, f_id) for f_id in frame_ids]
 
         if anno is None:
-            anno = self.get_sequence_info(seq_id)
+            anno = self.get_sequence_info(seq_id) # 获取视频标注
 
         anno_frames = {}
         for key, value in anno.items():
-            anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids]
+            anno_frames[key] = [value[f_id, ...].clone() for f_id in frame_ids] # 获取采样帧对应的标注
 
         return frame_list, anno_frames, obj_meta

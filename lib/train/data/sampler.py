@@ -70,6 +70,7 @@ class TrackingSampler(torch.utils.data.Dataset):
         returns:
             list - List of sampled frame numbers. None if not sufficient visible frames could be found.
         """
+        # 保证输入的帧序号范围为有效值
         if num_ids == 0:
             return []
         if min_id is None or min_id < 0:
@@ -77,6 +78,7 @@ class TrackingSampler(torch.utils.data.Dataset):
         if max_id is None or max_id > len(visible):
             max_id = len(visible)
         # get valid ids
+        # 提取满足可见性要求的帧序号
         if force_invisible:
             valid_ids = [i for i in range(min_id, max_id) if not visible[i]]
         else:
@@ -88,7 +90,7 @@ class TrackingSampler(torch.utils.data.Dataset):
         # No visible ids
         if len(valid_ids) == 0:
             return None
-
+        # 随机采样num_ids个帧
         return random.choices(valid_ids, k=num_ids)
 
     def __getitem__(self, index):
@@ -120,11 +122,14 @@ class TrackingSampler(torch.utils.data.Dataset):
                 if self.frame_sample_mode == 'causal':
                     # Sample test and train frames in a causal manner, i.e. search_frame_ids > template_frame_ids
                     while search_frame_ids is None:
+                        # 采样一个基准帧，并保证基准帧前后有足够帧数可以采样
                         base_frame_id = self._sample_visible_ids(visible, num_ids=1, min_id=self.num_template_frames - 1,
                                                                  max_id=len(visible) - self.num_search_frames)
+                        # 在基准帧之前采样n_template帧作为模板帧
                         prev_frame_ids = self._sample_visible_ids(visible, num_ids=self.num_template_frames - 1,
                                                                   min_id=base_frame_id[0] - self.max_gap - gap_increase,
                                                                   max_id=base_frame_id[0])
+                        # 在基准帧之后采样n_search帧作为搜索帧，保证时间一致性
                         if prev_frame_ids is None:
                             gap_increase += 5
                             continue
@@ -133,6 +138,7 @@ class TrackingSampler(torch.utils.data.Dataset):
                                                                   max_id=template_frame_ids[0] + self.max_gap + gap_increase,
                                                                   num_ids=self.num_search_frames)
                         # Increase gap until a frame is found
+                        # 如果范围内没有满足要求的帧，则扩大范围
                         gap_increase += 5
 
                 elif self.frame_sample_mode == "trident" or self.frame_sample_mode == "trident_pro":
@@ -146,6 +152,7 @@ class TrackingSampler(torch.utils.data.Dataset):
                 template_frame_ids = [1] * self.num_template_frames
                 search_frame_ids = [1] * self.num_search_frames
             try:
+                # TrackingSampler直接调用get_frames方法
                 template_frames, template_anno, meta_obj_train = dataset.get_frames(seq_id, template_frame_ids, seq_info_dict)
                 search_frames, search_anno, meta_obj_test = dataset.get_frames(seq_id, search_frame_ids, seq_info_dict)
 

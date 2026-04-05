@@ -7,7 +7,7 @@ class Settings:
         self.set_default()
 
     def set_default(self):
-        self.env = env_settings()
+        self.env = env_settings() # 数据集路径等设置
         self.use_gpu = True
 
 

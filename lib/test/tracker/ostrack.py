@@ -70,7 +70,7 @@ class OSTrack(BaseTracker):
             all_boxes_save = info['init_bbox'] * self.cfg.MODEL.NUM_OBJECT_QUERIES
             return {"all_boxes": all_boxes_save}
 
-    def track(self, image, info: dict = None):
+    def track(self, image, info: dict = None): # 跟踪函数
         H, W, _ = image.shape
         self.frame_id += 1
         x_patch_arr, resize_factor, x_amask_arr = sample_target(image, self.state, self.params.search_factor,
@@ -135,7 +135,7 @@ class OSTrack(BaseTracker):
         cx_prev, cy_prev = self.state[0] + 0.5 * self.state[2], self.state[1] + 0.5 * self.state[3]
         cx, cy, w, h = pred_box
         half_side = 0.5 * self.params.search_size / resize_factor
-        cx_real = cx + (cx_prev - half_side)
+        cx_real = cx + (cx_prev - half_side) # 搜索区域左上角加新的目标中心点
         cy_real = cy + (cy_prev - half_side)
         return [cx_real - 0.5 * w, cy_real - 0.5 * h, w, h]
 

@@ -103,4 +103,4 @@ def clip_box(box: list, H, W, margin=0):
     y2 = min(max(margin, y2), H)
     w = max(margin, x2-x1)
     h = max(margin, y2-y1)
-    return [x1, y1, w, h]
+    return [x1, y1, w, h] # 使得预测框在图像区域内

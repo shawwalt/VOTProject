@@ -161,15 +161,16 @@ class VisionTransformerCE(VisionTransformer):
         x = x[:, lens_z_new:]
 
         if removed_indexes_s and removed_indexes_s[0] is not None:
-            removed_indexes_cat = torch.cat(removed_indexes_s, dim=1)
+            removed_indexes_cat = torch.cat(removed_indexes_s, dim=1) # 保存所有被移除的search token
 
-            pruned_lens_x = lens_x - lens_x_new
+            pruned_lens_x = lens_x - lens_x_new  # 被剪枝掉的search tokens总长
             pad_x = torch.zeros([B, pruned_lens_x, x.shape[2]], device=x.device)
             x = torch.cat([x, pad_x], dim=1)
             index_all = torch.cat([global_index_s, removed_indexes_cat], dim=1)
             # recover original token order
             C = x.shape[-1]
             # x = x.gather(1, index_all.unsqueeze(-1).expand(B, -1, C).argsort(1))
+            # 将src中元素在某个维度重拍，dim=1，则只改变dim=1元素的顺序
             x = torch.zeros_like(x).scatter_(dim=1, index=index_all.unsqueeze(-1).expand(B, -1, C).to(torch.int64), src=x)
 
         x = recover_tokens(x, lens_z_new, lens_x, mode=self.cat_mode)

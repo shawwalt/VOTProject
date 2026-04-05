@@ -25,6 +25,7 @@ def run(settings):
     # update the default configs with config file
     if not os.path.exists(settings.cfg_file):
         raise ValueError("%s doesn't exist." % settings.cfg_file)
+    # 加载默认训练配置类，默认训练配置类能够自己解析yaml并更新
     config_module = importlib.import_module("lib.config.%s.config" % settings.script_name)
     cfg = config_module.cfg
     config_module.update_config_from_file(settings.cfg_file)
@@ -52,7 +53,7 @@ def run(settings):
 
     # Create network
     if settings.script_name == "ostrack":
-        net = build_ostrack(cfg)
+        net = build_ostrack(cfg) # 构建模型
     else:
         raise ValueError("illegal script name")
 

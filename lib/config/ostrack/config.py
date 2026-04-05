@@ -4,7 +4,7 @@ import yaml
 """
 Add default config for OSTrack.
 """
-cfg = edict()
+cfg = edict() # 全局变量
 
 # MODEL
 cfg.MODEL = edict()
@@ -125,7 +125,7 @@ def _update_config(base_cfg, exp_cfg):
         for k, v in exp_cfg.items():
             if k in base_cfg:
                 if not isinstance(v, dict):
-                    base_cfg[k] = v
+                    base_cfg[k] = v # 遇到树的结点，则赋值，否则遍历当前分支赋值
                 else:
                     _update_config(base_cfg[k], v)
             else:
@@ -137,7 +137,7 @@ def _update_config(base_cfg, exp_cfg):
 def update_config_from_file(filename, base_cfg=None):
     exp_config = None
     with open(filename) as f:
-        exp_config = edict(yaml.safe_load(f))
+        exp_config = edict(yaml.safe_load(f)) # yaml可以直接加载成edict
         if base_cfg is not None:
             _update_config(base_cfg, exp_config)
         else:

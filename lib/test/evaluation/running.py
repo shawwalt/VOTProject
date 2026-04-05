@@ -17,12 +17,16 @@ def _save_tracker_output(seq: Sequence, tracker: Tracker, output: dict):
     if not os.path.exists(tracker.results_dir):
         print("create tracking result dir:", tracker.results_dir)
         os.makedirs(tracker.results_dir)
-    if seq.dataset in ['trackingnet', 'got10k']:
-        if not os.path.exists(os.path.join(tracker.results_dir, seq.dataset)):
-            os.makedirs(os.path.join(tracker.results_dir, seq.dataset))
+    # Mapping for dataset output directory names
+    dataset_dir_map = {'trackingnet': 'trackingnet', 'got10k': 'got-10k', 'lasot': 'LaSOT'}
+    _dataset_dir = dataset_dir_map.get(seq.dataset, seq.dataset)
+
+    if seq.dataset in ['trackingnet', 'got10k', 'lasot']:
+        if not os.path.exists(os.path.join(tracker.results_dir, _dataset_dir)):
+            os.makedirs(os.path.join(tracker.results_dir, _dataset_dir))
     '''2021.1.5 create new folder for these two datasets'''
-    if seq.dataset in ['trackingnet', 'got10k']:
-        base_results_path = os.path.join(tracker.results_dir, seq.dataset, seq.name)
+    if seq.dataset in ['trackingnet', 'got10k', 'lasot']:
+        base_results_path = os.path.join(tracker.results_dir, _dataset_dir, seq.name)
     else:
         base_results_path = os.path.join(tracker.results_dir, seq.name)
 
@@ -114,9 +118,11 @@ def run_sequence(seq: Sequence, tracker: Tracker, debug=False, num_gpu=8):
         pass
 
     def _results_exist():
+        dataset_dir_map = {'trackingnet': 'trackingnet', 'got10k': 'got-10k', 'lasot': 'LaSOT'}
+        _dataset_dir = dataset_dir_map.get(seq.dataset, seq.dataset)
         if seq.object_ids is None:
-            if seq.dataset in ['trackingnet', 'got10k']:
-                base_results_path = os.path.join(tracker.results_dir, seq.dataset, seq.name)
+            if seq.dataset in ['trackingnet', 'got10k', 'lasot']:
+                base_results_path = os.path.join(tracker.results_dir, _dataset_dir, seq.name)
                 bbox_file = '{}.txt'.format(base_results_path)
             else:
                 bbox_file = '{}/{}.txt'.format(tracker.results_dir, seq.name)

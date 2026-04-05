@@ -125,7 +125,7 @@ def build_ostrack(cfg, training=True):
     else:
         raise NotImplementedError
 
-    backbone.finetune_track(cfg=cfg, patch_start_index=patch_start_index)
+    backbone.finetune_track(cfg=cfg, patch_start_index=patch_start_index) # 修改预训练参数，使其适应新的尺度
 
     box_head = build_box_head(cfg, hidden_dim)
 

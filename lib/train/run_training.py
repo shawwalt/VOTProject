@@ -5,6 +5,8 @@ import importlib
 import cv2 as cv
 import torch.backends.cudnn
 import torch.distributed as dist
+import warnings
+warnings.filterwarnings("ignore")
 
 import random
 import numpy as np
@@ -32,6 +34,7 @@ def run_training(script_name, config_name, cudnn_benchmark=True, local_rank=-1, 
         config_name: Name of the yaml file in the "experiments/<script_name>".
         cudnn_benchmark: Use cudnn benchmark or not (default is True).
     """
+    # 加载配置到setting类中后，加载训练脚本并启动
     if save_dir is None:
         print("save_dir dir is not given. Use the default dir instead.")
     # This is needed to avoid strange crashes related to opencv
