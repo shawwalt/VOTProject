@@ -179,3 +179,4 @@ train_log.txt
 convert_coco_to_lmdb.py
 standard_format_got10k/
 standard_format_trackingnet/
+installation/
