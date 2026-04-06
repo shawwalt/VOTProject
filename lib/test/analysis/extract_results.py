@@ -129,15 +129,25 @@ def extract_results(trackers, dataset, report_name, skip_missing_seq=False, plot
         target_visible = torch.tensor(seq.target_visible, dtype=torch.uint8) if seq.target_visible is not None else None
         for trk_id, trk in enumerate(trackers):
             # Load results
-            base_results_path = '{}/{}'.format(trk.results_dir, seq.name)
+            # Mapping for dataset output directory names (same as in running.py)
+            dataset_dir_map = {'trackingnet': 'trackingnet', 'got10k': 'got-10k', 'got10k_test': 'got-10k', 'lasot': 'LaSOT'}
+            _dataset_dir = dataset_dir_map.get(seq.dataset, seq.dataset)
+            if seq.dataset in ['trackingnet', 'got10k', 'got10k_test', 'lasot']:
+                base_results_path = '{}/{}/{}'.format(trk.results_dir, _dataset_dir, seq.name)
+            else:
+                base_results_path = '{}/{}'.format(trk.results_dir, seq.name)
             results_path = '{}.txt'.format(base_results_path)
 
             if os.path.isfile(results_path):
                 pred_bb = torch.tensor(load_text(str(results_path), delimiter=('\t', ','), dtype=np.float64))
             else:
                 if skip_missing_seq:
-                    valid_sequence[seq_id] = 0
-                    break
+                    # Skip this tracker for this sequence, continue with next tracker
+                    avg_overlap_all[seq_id, trk_id] = float('nan')
+                    ave_success_rate_plot_overlap[seq_id, trk_id, :] = float('nan')
+                    ave_success_rate_plot_center[seq_id, trk_id, :] = float('nan')
+                    ave_success_rate_plot_center_norm[seq_id, trk_id, :] = float('nan')
+                    continue
                 else:
                     raise Exception('Result not found. {}'.format(results_path))
 

@@ -122,6 +122,88 @@ def build_ostrack(cfg, training=True):
         hidden_dim = backbone.embed_dim
         patch_start_index = 1
 
+    # MambaVision backbones (without CE)
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_tiny_patch16_224':
+        from .mambavision_models import mamba_vision_tiny_patch16_224
+        backbone = mamba_vision_tiny_patch16_224(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_small_patch16_224':
+        from .mambavision_models import mamba_vision_small_patch16_224
+        backbone = mamba_vision_small_patch16_224(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_base_patch16_224':
+        from .mambavision_models import mamba_vision_base_patch16_224
+        backbone = mamba_vision_base_patch16_224(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_large_patch16_224':
+        from .mambavision_models import mamba_vision_large_patch16_224
+        backbone = mamba_vision_large_patch16_224(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    # MambaVision backbones (with CE)
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_tiny_patch16_224_ce':
+        from .mambavision_models import mamba_vision_tiny_patch16_224_ce
+        backbone = mamba_vision_tiny_patch16_224_ce(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+            ce_loc=cfg.MODEL.BACKBONE.CE_LOC,
+            ce_keep_ratio=cfg.MODEL.BACKBONE.CE_KEEP_RATIO,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_small_patch16_224_ce':
+        from .mambavision_models import mamba_vision_small_patch16_224_ce
+        backbone = mamba_vision_small_patch16_224_ce(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+            ce_loc=cfg.MODEL.BACKBONE.CE_LOC,
+            ce_keep_ratio=cfg.MODEL.BACKBONE.CE_KEEP_RATIO,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_base_patch16_224_ce':
+        from .mambavision_models import mamba_vision_base_patch16_224_ce
+        backbone = mamba_vision_base_patch16_224_ce(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+            ce_loc=cfg.MODEL.BACKBONE.CE_LOC,
+            ce_keep_ratio=cfg.MODEL.BACKBONE.CE_KEEP_RATIO,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
+    elif cfg.MODEL.BACKBONE.TYPE == 'mamba_vision_large_patch16_224_ce':
+        from .mambavision_models import mamba_vision_large_patch16_224_ce
+        backbone = mamba_vision_large_patch16_224_ce(
+            pretrained=pretrained if training else '',
+            drop_path_rate=cfg.TRAIN.DROP_PATH_RATE,
+            ce_loc=cfg.MODEL.BACKBONE.CE_LOC,
+            ce_keep_ratio=cfg.MODEL.BACKBONE.CE_KEEP_RATIO,
+        )
+        hidden_dim = backbone.embed_dim
+        patch_start_index = 0
+
     else:
         raise NotImplementedError
 
